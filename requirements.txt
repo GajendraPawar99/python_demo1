@@ -1,3 +1,6 @@
 pytest
 selenium
 requests
+pytest
+selenium
+requests
