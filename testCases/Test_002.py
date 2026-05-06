@@ -5,11 +5,11 @@ from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from utilities.conftest import dec ,driver
-import time
+from selenium.webdriver.support import expected_conditions as EC
 from jsonschema import validate,ValidationError
 from selenium.webdriver.common.by import By
 
-class Test_login:
+class TestLogin:
 
 
     @dec
@@ -55,17 +55,46 @@ class Test_login:
         print(f"Found {len(links)} results.")
 
 
-    def test_amazon(self,driver):
+    # def test_amazon(self,driver):
+    #
+    #     # driver.get("https://www.amazon.com/")
+    #     #
+    #     #
+    #     #
+    #     # wait = WebDriverWait(driver, 10)
+    #     # driver.execute_script("window.scrollTo(0, document.body.scrollHeight/2);")
+    #     # element = wait.until(EC.element_to_be_clickable((By.ID, "sp-cc-accept"))).click()
+    #
+    #
+    #     # action=ActionChains(driver)
+    #     # action.move_to_element(element).perform()
+    #     # element = driver.find_element(By.XPATH, '//i[@class="a-icon a-icon-next-rounded"]/span')
+    #     # action = ActionChains(driver)
+    #     # action.move_to_element(element).perform()
+
+    def test_amazon(self, driver):
 
         driver.get("https://www.amazon.com/")
-        driver.implicitly_wait(2)
-        element=driver.find_element(By.XPATH,'//i[@class="a-icon a-icon-next-rounded"]/span')
-        action=ActionChains(driver)
-        action.move_to_element(element).perform()
-        element = driver.find_element(By.XPATH, '//i[@class="a-icon a-icon-next-rounded"]/span')
-        action = ActionChains(driver)
-        action.move_to_element(element).perform()
+        driver.maximize_window()
 
+        wait = WebDriverWait(driver, 15)
+
+        # Accept cookies if present
+        try:
+            wait.until(EC.element_to_be_clickable((By.ID, "sp-cc-accept"))).click()
+        except:
+            pass
+
+        # Scroll gradually
+        for _ in range(3):
+            driver.execute_script("window.scrollBy(0, 600);")
+
+        elements = driver.find_elements(By.XPATH, '//a[contains(@class,"a-carousel-goto-nextpage")]')
+
+        if elements:
+            elements[0].click()
+        else:
+            print("Carousel not available in this browser/session")
 
     def test_schema(self):
         response=    {
